@@ -42,7 +42,15 @@ exports.readListOfUrls = function(cb) {
   })
 };
 
-exports.isUrlInList = function() {
+exports.isUrlInList = function(target, cb) {
+  return exports.readListOfUrls(function(urls) {
+    urls.forEach(function(url) {
+      if (url === target) {
+        cb(true);
+      }
+    })
+    cb(false);
+  })
 };
 
 exports.addUrlToList = function() {
