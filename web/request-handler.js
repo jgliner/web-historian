@@ -30,13 +30,11 @@ exports.handleRequest = function (req, res) {
   }
   else {
     new Promise(function(resolve, reject) {
-      console.log('inside req case');
       request('http:/'+req.url, function(err, res, data){
         if (err) {
           reject(err);
         }
         else {
-          console.log('fetched data from site');
           resolve(data);
         }
       });
@@ -45,6 +43,10 @@ exports.handleRequest = function (req, res) {
       //save file to our archive
       res.writeHead(200, serve.headers);
       res.write(data);
+      res.end();
+    })
+    .catch(function(err) {
+      res.writeHead(404, serve.headers);
       res.end();
     });
   }
