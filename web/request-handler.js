@@ -11,7 +11,7 @@ exports.handleRequest = function (req, res) {
   console.log('REQ',req.url);
 
   // serve index.html
-  if(req.url === '/'){
+  if(req.url === '/' && req.method === 'GET'){
     new Promise(function(resolve, reject) {
       fs.readFile(archive.paths.siteAssets+'/index.html', 'utf8', function(err, data){
         if (err) {
@@ -27,6 +27,14 @@ exports.handleRequest = function (req, res) {
       res.write(data);
       res.end();
     });
+  }
+  else if (req.method === 'POST') {
+    req.on('data', function(data) {
+      var url = data.toString().replace(/url\=/igm,'')+'\n';
+      fs.writeFile(archive.paths.list, url, 'utf8');
+      res.writeHead(302, serve.headers);
+      res.end();
+    })
   }
   else {
     new Promise(function(resolve, reject) {
