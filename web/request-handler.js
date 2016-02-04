@@ -11,7 +11,7 @@ exports.handleRequest = function (req, res) {
   console.log('REQ',req.url);
 
   // serve index.html
-  if(req.url === '/' && req.method === 'GET'){
+  if(req.url.match(/^\/$|\/(loading)/igm) && req.method === 'GET'){
     new Promise(function(resolve, reject) {
       fs.readFile(archive.paths.siteAssets+'/index.html', 'utf8', function(err, data){
         if (err) {
