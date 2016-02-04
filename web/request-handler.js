@@ -8,21 +8,46 @@ var Promise = require('bluebird');
 // require more modules/folders here! 
 
 exports.handleRequest = function (req, res) {
-  new Promise(function(resolve, reject) {
-    fs.readFile(archive.paths.siteAssets+'/index.html', 'utf8', function(err, data){
-      if (err) {
-        reject(err);
-      }
-      else {
-        resolve(data);
-      }
+  console.log('REQ',req.url);
+
+  // serve index.html
+  if(req.url === '/'){
+    new Promise(function(resolve, reject) {
+      fs.readFile(archive.paths.siteAssets+'/index.html', 'utf8', function(err, data){
+        if (err) {
+          reject(err);
+        }
+        else {
+          resolve(data);
+        }
+      });
+    })
+    .then(function(data) {
+      res.writeHead(200, serve.headers);
+      res.write(data);
+      res.end();
     });
-  })
-  .then(function(data) {
-    res.writeHead(200, serve.headers);
-    res.write(data);
-    res.end();
-  });
+  }
+  else {
+    new Promise(function(resolve, reject) {
+      console.log('inside req case');
+      request('http:/'+req.url, function(err, res, data){
+        if (err) {
+          reject(err);
+        }
+        else {
+          console.log('fetched data from site');
+          resolve(data);
+        }
+      });
+    })
+    .then(function(data) {
+      //save file to our archive
+      res.writeHead(200, serve.headers);
+      res.write(data);
+      res.end();
+    });
+  }
   // console.log(result);
 
 };
