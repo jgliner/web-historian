@@ -9,10 +9,12 @@ var Promise = require('bluebird');
 
 exports.handleRequest = function (req, res) {
   console.log('REQ',req.url);
+
   // serve index.html and loading.html
   var url = req.url === '/' ? archive.paths.siteAssets+'/index.html' : req.url;
+
   if(req.method === 'GET'){
-    //if GET
+    // method to discern local GET vs. external GET
     serve.isLocal(req.url, function(isLocal) {
       if (isLocal) {
         new Promise(function(resolve, reject) {
@@ -89,6 +91,5 @@ exports.handleRequest = function (req, res) {
       res.end();
     });
   }
-  // console.log(result);
 
 };

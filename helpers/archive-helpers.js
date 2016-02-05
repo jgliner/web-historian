@@ -58,7 +58,24 @@ exports.addUrlToList = function(url, cb) {
 };
 
 exports.isUrlArchived = function(url, cb) {
-  
+  new Promise(function(resolve, reject) {
+    fs.readdir(exports.paths.archivedSites, function(err, data) {
+      if (err) {
+        reject(err);
+      }
+      else {
+        resolve(data);
+      }
+    });
+  })
+  .then(function(sitename) {
+    sitename.forEach(function(site) {
+      if (site === url) {
+        cb(true);
+      }
+    })
+    cb(false);
+  })
 };
 
 exports.downloadUrls = function() {

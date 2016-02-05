@@ -35,7 +35,6 @@ exports.isLocal = function(url, cb) {
   })
   .then(function(localContents) {
     for (var i = 0; i < localContents.length; i++) {
-      console.log(localContents[i], url, url===localContents[i])
       if (url === localContents[i] || url.match(/\/(archives)\/(sites\.txt)/igm)) {
         cb(true);
         return;
