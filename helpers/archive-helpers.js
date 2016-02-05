@@ -53,7 +53,8 @@ exports.isUrlInList = function(target, cb) {
   })
 };
 
-exports.addUrlToList = function() {
+exports.addUrlToList = function(url, cb) {
+  cb(url+'\n');
 };
 
 exports.isUrlArchived = function() {
