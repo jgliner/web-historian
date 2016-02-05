@@ -1,6 +1,8 @@
 var path = require('path');
 var fs = require('fs');
 var archive = require('../helpers/archive-helpers');
+var Promise = require('bluebird');
+var _ = require('underscore');
 
 exports.headers = headers = {
   "access-control-allow-origin": "*",
@@ -19,3 +21,26 @@ exports.serveAssets = function(res, asset, callback) {
 
 
 // As you progress, keep thinking about what helper functions you can put here!
+exports.isLocal = function(url, cb) {
+  url = url === '/' ? 'index.html' : url;
+  new Promise(function(resolve, reject) {
+    fs.readdir(archive.paths.siteAssets, function(err, contents) {
+      if (err) {
+        reject(err);
+      }
+      else {
+        resolve(contents);
+      }
+    })
+  })
+  .then(function(localContents) {
+    for (var i = 0; i < localContents.length; i++) {
+      console.log(localContents[i], url, url===localContents[i])
+      if (url === localContents[i] || url.match(/\/(archives)\/(sites\.txt)/igm)) {
+        cb(true);
+        return;
+      }
+    }
+    cb(false);
+  })
+}
