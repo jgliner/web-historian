@@ -12,14 +12,6 @@ exports.headers = headers = {
   'Content-Type': "text/html"
 };
 
-exports.serveAssets = function(res, asset, callback) {
-  // Write some code here that helps serve up your static files!
-  // (Static files are things like html (yours or archived from others...),
-  // css, or anything that doesn't change often.)
-};
-
-
-
 // As you progress, keep thinking about what helper functions you can put here!
 exports.isLocal = function(url, cb) {
   url = url === '/' ? 'index.html' : url;
@@ -41,5 +33,28 @@ exports.isLocal = function(url, cb) {
       }
     }
     cb(false);
+    return;
+  })
+}
+
+exports.serveAsset = function(req, res, url) {
+  new Promise(function(resolve, reject) {
+    //check if in site file
+    fs.readFile(url, 'utf8', function(err, data){
+      if (err) {
+        throw err;
+      }
+      else if (req.url === '/') { //is index.html
+        reject(data);
+      }
+      else { // is extfile
+        resolve(data);
+      }
+    });
+  }) //if html
+  .catch(function(data) {
+    res.writeHead(200, exports.headers);
+    res.write(data);
+    res.end();
   })
 }

@@ -78,5 +78,25 @@ exports.isUrlArchived = function(url, cb) {
   })
 };
 
-exports.downloadUrls = function() {
+exports.downloadUrls = function(req, res) {
+  new Promise(function(resolve, reject) {
+    request('http:/'+req.url, function(err, res, data){
+      if (err) {
+        reject(err);
+      }
+      else {
+        resolve(data);
+      }
+    });
+  })
+  .then(function(data) {
+    //save file to our archive
+    res.writeHead(200, serve.headers);
+    res.write(data);
+    res.end();
+  })
+  .catch(function(err) {
+    res.writeHead(404, serve.headers);
+    res.end();
+  });
 };
