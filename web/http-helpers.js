@@ -42,17 +42,14 @@ exports.serveAsset = function(req, res, url) {
     //check if in site file
     fs.readFile(url, 'utf8', function(err, data){
       if (err) {
-        throw err;
+        reject(err);
       }
-      else if (req.url === '/') { //is index.html
-        reject(data);
-      }
-      else { // is extfile
+      else {
         resolve(data);
       }
     });
   }) //if html
-  .catch(function(data) {
+  .then(function(data) {
     res.writeHead(200, exports.headers);
     res.write(data);
     res.end();

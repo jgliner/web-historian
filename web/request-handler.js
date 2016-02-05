@@ -2,7 +2,6 @@ var fs = require('fs');
 var path = require('path');
 var archive = require('../helpers/archive-helpers');
 var helpers = require("./http-helpers.js");
-var request = require('request');
 var Promise = require('bluebird');
 // serveAssets = function(res, asset, callback)
 // require more modules/folders here! 
@@ -23,7 +22,9 @@ exports.handleRequest = function (req, res) {
       else {
         archive.isUrlArchived(req.url, function(isInArchive) {
           if (isInArchive) {
-            console.log()
+            helpers.serveAsset(req, res, archive.paths.archivedSites+url);
+          }
+          else {
           }
         })
       }

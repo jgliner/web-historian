@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
 var Promise = require('bluebird');
+var request = require('request');
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -68,14 +69,15 @@ exports.isUrlArchived = function(url, cb) {
       }
     });
   })
-  .then(function(sitename) {
-    sitename.forEach(function(site) {
-      if (site === url) {
+  .then(function(sitenames) {
+    for (var i = 0; i < sitenames.length; i++) {
+      if (sitenames[i] === url.slice(1)) {
         cb(true);
+        return;
       }
-    })
+    }
     cb(false);
-  })
+  });
 };
 
 exports.downloadUrls = function(req, res) {
