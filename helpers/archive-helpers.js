@@ -48,16 +48,17 @@ exports.isUrlInList = function(target, cb) {
       if (url === target) {
         cb(true);
       }
-    })
+    });
     cb(false);
-  })
+  });
 };
 
 exports.addUrlToList = function(url, cb) {
   cb(url+'\n');
 };
 
-exports.isUrlArchived = function() {
+exports.isUrlArchived = function(url, cb) {
+  
 };
 
 exports.downloadUrls = function() {
