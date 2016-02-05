@@ -54,4 +54,21 @@ exports.serveAsset = function(req, res, url) {
     res.write(data);
     res.end();
   })
+  .catch(function() {
+    exports.throw404(req, res)
+  })
+}
+
+exports.throw404 = function(req, res) {
+  console.log('404\'d')
+  fs.readFile(archive.paths.loadAsset, 'utf8', function(err, data){
+    if (err) {
+      throw err;
+    }
+    else {
+      res.writeHead(404, exports.headers);
+      res.write(data);
+      res.end();
+    }
+  });
 }

@@ -25,6 +25,7 @@ exports.handleRequest = function (req, res) {
             helpers.serveAsset(req, res, archive.paths.archivedSites+url);
           }
           else {
+            helpers.throw404(req, res);
           }
         })
       }
