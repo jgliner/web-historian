@@ -83,29 +83,6 @@ exports.isUrlArchived = function(url, cb) {
 
 exports.downloadUrls = function(incoming) {
   incoming.forEach(function(site) {
-    new Promise(function(resolve, reject) {
-      request('http://'+site, function(err, res, data){
-        if (err) {
-          reject(err);
-        }
-        else {
-          resolve(data)
-        }
-      });
-    })
-    .then(function(data) {
-      exports.writeArchived(data);
-    })
-  });
-};
-
-exports.writeArchived = function(data) {
-  fs.writeFile(exports.paths.archivedSites+'/'+site+'.txt', data, 'utf8', function(err) {
-    if (err) {
-      console.error(err)
-    }
-    else {
-      console.log('WROTE', data);
-    }
+    request('http://'+site).pipe(fs.createWriteStream(exports.paths.archivedSites + '/' + site, 'utf8'))
   });
 }
