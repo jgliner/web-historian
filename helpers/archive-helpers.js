@@ -81,25 +81,31 @@ exports.isUrlArchived = function(url, cb) {
   });
 };
 
-exports.downloadUrls = function(req, res) {
-  new Promise(function(resolve, reject) {
-    request('http:/'+req.url, function(err, res, data){
-      if (err) {
-        reject(err);
-      }
-      else {
-        resolve(data);
-      }
-    });
-  })
-  .then(function(data) {
-    //save file to our archive
-    res.writeHead(200, serve.headers);
-    res.write(data);
-    res.end();
-  })
-  .catch(function(err) {
-    res.writeHead(404, serve.headers);
-    res.end();
+exports.downloadUrls = function(incoming) {
+  incoming.forEach(function(site) {
+    new Promise(function(resolve, reject) {
+      request('http://'+site, function(err, res, data){
+        if (err) {
+          reject(err);
+        }
+        else {
+          resolve(data)
+        }
+      });
+    })
+    .then(function(data) {
+      exports.writeArchived(data);
+    })
   });
 };
+
+exports.writeArchived = function(data) {
+  fs.writeFile(exports.paths.archivedSites+'/'+site+'.txt', data, 'utf8', function(err) {
+    if (err) {
+      console.error(err)
+    }
+    else {
+      console.log('WROTE', data);
+    }
+  });
+}
